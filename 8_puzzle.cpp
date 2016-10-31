@@ -1,24 +1,74 @@
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
+#include "8_puzzle.h"
 
 using namespace std;
 
-puzzle[3][3];
-goal[3][3];
+int puzzle[3][3];
+
+//check valid move
+
+bool is_valid_move()
+{
+
+}
 
 //move blank left function
-//move blank right function
-//move blank up funtion
-//move blank right function
+void move_blank_left()
+{
 
-//uniform cost search algorithm i.e g(n)
-//misplaced time heuristic algorithm i.e h(n)
+}
+
+//move blank right function
+void move_blank_right()
+{
+
+}
+
+//move blank up funtion
+void move_blank_up()
+{
+
+}
+
+//move blank down function
+void move_blank_down()
+{
+
+}
+
+//uniform cost search algorithm
+void * uniform_cost_search()
+{
+
+}
+
+//misplaced tile heuristic algorithm
+int misplace_tile()
+{
+
+}
+
+void * misplaced_tile_heuristic()
+{
+
+}
 //manhattan distance heuristic algorihtm i.e h'(n)
+int manhattan_distance()
+{
+
+}
+
+void * manhattan_distance_heuristic()
+{
+
+}
 
 //queuing function
 
 //general-search
+void general_search(problem puzzle, void *queuing_function())
+{
+
+}
 
 //generate random intial stage
 
@@ -32,21 +82,37 @@ void output(int total_nodes, int max_nodes, int depth)
 	cout<<"The depth of the goal node was "<< depth <<endl;
 }
 
+//print algorithm choices
+void print_algo_choices()
+{
+		cout<<"Enter your choice of algorithm"<<endl;
+		cout<<"1. Uniform Cost Search"<<endl;
+		cout<<"2. A* with the Misplaced Tile heuristic."<<endl;
+		cout<<"3. A* with the Manhattan distance heuristic."<<endl;
+}
+
 int main(int argc, char const *argv[])
 {
-	int puzzle_choice;
+	int puzzle_choice, algo_choice;
 	
 	cout<<"Welcome to Abhishek's 8-puzzle solver."<<endl;
 	
-	cout<<"Type “1” to use a default puzzle, or “2” to enter your own puzzle."<<endl;
+	cout<<"Type '1' to use a default puzzle, or"<<endl;
+	cout<< "Type '2' to enter your own puzzle."<<endl;
 	cin>>puzzle_choice;
 
 	if(puzzle_choice == 1)
 	{
 		//generate random intial state
+
+		//Algorithm Choice Input
+		print_algo_choices();
+		cin>>algo_choice;
 		//general-search
 		//output function
-	} else{
+	} 
+	else if(puzzle_choice == 2)
+	{
 		cout<<"Enter your puzzle, use a zero to represent the blank"<<endl;
 		//puzzle input
 		for(int i = 0; i < 3; i++)
@@ -58,8 +124,16 @@ int main(int argc, char const *argv[])
 			}
 		}
 
+		//Algorithm Choice Input
+		print_algo_choices();
+		cin>>algo_choice;
+
 		//general-search
 		//output function
+	}
+	else
+	{
+		cout<<"Wrong!!(In trump's Voice)"<<endl;
 	}
 
 	return 0;
