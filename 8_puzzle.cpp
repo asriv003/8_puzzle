@@ -5,20 +5,77 @@
 
 using namespace std;
 
+class Node
+{
+private:
+	int** state = NULL;
+	int h_n;
+	int g_n;
+public:
+	int priority;
+	Node();
+	Node( int nNewState[][3], int nH, int nG )
+	{
+		state = new int*[3];
+		for (int h = 0; h < 3; h++)
+		{
+			state[h] = new int[3];
+			for (int w = 0; w < 3; w++)
+			{
+				state[h][w] = nNewState[h][w];
+			}
+		}
+		h_n = nH;
+		g_n = nG;
+		priority = h_n + g_n;
+	}
+	int ** get_state()
+	{
+		return state;
+	}
+	void set_state(int newState[][3])
+	{
+		for(int i = 0;i < 3; i++)
+			for(int j = 0; j < 3; j++)
+				state[i][j] = newState[i][j];
+	}
+	void print_state()
+	{
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				cout<<state[i][j]<<" ";
+			}
+			cout<<endl;
+		}
+	}
+};
+
 class puzzle
 {
-
 private:
-	int state[3][3];
+	Node current_node;
+	Node goal_node;
 	int goal[3][3];
+	queue<Node> visited_nodes;
 public:
-	puzzle(int *initial)
+	puzzle(Node n)
 	{
-
+		current_node = n;
 	}
-	~puzzle();
-	void print_node();
-	int get_current_node();
+	void print_current_node()
+	{
+		current_node.print_state();
+	}
+	Node get_current_node()
+	{
+		return current_node;
+	}
+	void set_current_node(Node n)
+	{
+		current_node = n;
+	}
 	void generate_goal_state()
 	{
 		for(int i = 0; i < 3; i++)
@@ -26,42 +83,11 @@ public:
 				goal[i][j] = 3*i+j+1;
 
 		goal[2][2] = 0;
+		goal_node.set_state(goal);
 	}
 };
 
-class Node
-{
-private:
-	int state[3][3];
-	int h;
-	int g;
-public:
-	int priority;
-	Node( int nNewState[][3], int nH, int nG )
-	{
-		for(int i = 0;i < 3; i++)
-			for(int j = 0; j < 3; j++)
-				state[i][j] = nNewState[i][j];
-		h = nH;
-		g = nG;
-		priority = h + g;
-	}
-};
 
-//Overload the > operator.
-bool operator> (const  Node &node1, const Node &node2)
-{
-	return node1.priority < node2.priority;	
-}
-
-
-//The priorities will be assigned in the Descending Order of priority
-priority_queue<Node, vector<Node>,greater<vector<Node>::value_type> > pqNodes;
-
-// Add container elements.
-/*pqStudent2.push( Student( "Mark", 38 ) );
-pqStudent2.push( Student( "Marc", 25 ) );
-*/
 //check valid move
 bool is_valid_move()
 {
@@ -119,9 +145,36 @@ void * a_star_manhattan_distance_heuristic()
 
 }
 
+//Overload the > operator.
+bool operator> (const  Node &node1, const Node &node2)
+{
+	return node1.priority < node2.priority;	
+}
+
+
+// Add container elements.
+/*pqStudent2.push( Student( "Mark", 38 ) );
+pqStudent2.push( Student( "Marc", 25 ) );
+*/
+
 //general-search
 void general_search(Node problem, void *queuing_function())
 {
+	//The priorities will be assigned in the Descending Order of priority
+	priority_queue<Node, vector<Node>,greater<vector<Node>::value_type> > nodes;
+	nodes.push(problem);
+	while (1)
+	{
+		if(nodes.empty())
+		{
+			cout<<"Is empty";
+			return;
+		} 
+        //puzzle element(nodes.top());
+        //nodes.pop();
+        //if problem.goal state() succeed then return node
+        //node = queuing function()
+	}
 
 }
 
@@ -137,25 +190,19 @@ void output(int total_nodes, int max_nodes, int depth)
 	cout<<"The depth of the goal node was "<< depth <<endl;
 }
 
-//print algorithm choices
-void print_algo_choices()
-{
-		
-}
-
 int main(int argc, char const *argv[])
 {
 	int puzzle_choice, algo_choice, start_state[3][3];;
 	
 	cout<<"Welcome to Abhishek's 8-puzzle solver."<<endl;
 	
-	cout<<"Type '1' to use a default puzzle, or"<<endl;
-	cout<< "Type '2' to enter your own puzzle."<<endl;
+	cout<<"Type '1' to use a default puzzle, or"<<endl<<"Type '2' to enter your own puzzle."<<endl;
 	cin>>puzzle_choice;
 
 	if(puzzle_choice == 1)
 	{
 		//generate intial state
+		int default_state[3][3] = {{1,2,3},{4,0,6},{7,5,8}};
 
 	} 
 	else if(puzzle_choice == 2)
@@ -180,7 +227,8 @@ int main(int argc, char const *argv[])
 	//Intialization	
 	Node problem(start_state,0,0);
 	//Algorithm Choice Input
-	cout<<"Enter your choice of algorithm"<<endl<<"1. Uniform Cost Search"<<endl<<"2. A* with the Misplaced Tile heuristic."<<endl<<"3. A* with the Manhattan distance heuristic."<<endl;
+	cout<<"Enter your choice of algorithm"<<endl<<"1. Uniform Cost Search"<<endl<<"2. A* with the Misplaced Tile heuristic."
+	<<endl<<"3. A* with the Manhattan distance heuristic."<<endl;
 	cin>>algo_choice;
 	//general-search
 	if(algo_choice == 1)
