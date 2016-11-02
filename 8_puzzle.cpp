@@ -96,7 +96,6 @@ public:
 		int* a = n.get_state();
 		for (it = visited_nodes.begin(); it != visited_nodes.end(); ++it)
 		{
-			/*int* b = it->get_state();*/
 			bool check = true;
 			for(int i = 0; i < 9; i++)
 			{
@@ -121,13 +120,20 @@ int blank_index(int node[9])
 			return i;
 }
 
+void swap_value(int *src,int * dest)
+{
+	int *temp = src;
+	*src = *dest;
+	*dest = *temp;
+}
+
 //move blank left function
 bool move_blank_left(Node &n)
 {
 	int blank = blank_index(n.get_state());
 	if(blank%3 != 0)
 	{
-		//swap_value(&current[index], &current[index-(int)row]);
+		swap_value(&n.state[blank], &n.state[blank-1]);
 		return true;
 	}
 	return false;
@@ -139,7 +145,7 @@ bool move_blank_right(Node &n)
 int blank = blank_index(n.get_state());
 	if(blank%3 != 2)
 	{
-		//swap_value(&current[index], &current[index-(int)row]);
+		swap_value(&n.state[blank], &n.state[blank+1]);
 		return true;
 	}
 	return false;
@@ -151,7 +157,7 @@ bool move_blank_up(Node &n)
 	int blank = blank_index(n.get_state());
 	if(blank >= 3)
 	{
-		//swap_value(&current[index], &current[index-(int)row]);
+		swap_value(&n.state[blank], &n.state[blank-3]);
 		return true;
 	}
 	return false;
@@ -163,7 +169,7 @@ bool move_blank_down(Node &n)
 	int blank = blank_index(n.get_state());
 	if(blank < 6)
 	{
-		//swap(&current[index], &current[index+(int)row]);
+		swap_value(&n.state[blank], &n.state[blank+3]);
 		return true;
 	}
 	return false;
@@ -215,11 +221,11 @@ void general_search(Node problem, void *queuing_function())
 		{
 			cout<<"Is empty";
 			return;
-		} 
-        element.set_current_node(nodes.top());
-        nodes.pop();
-        //if problem.goal state() succeed then return node
-        //node = queuing function()
+		}
+		element.set_current_node(nodes.top());
+		nodes.pop();
+		//if problem.goal state() succeed then return node
+		//node = queuing function()
 	}
 
 }
@@ -245,6 +251,7 @@ int main(int argc, char const *argv[])
 	if(puzzle_choice == 1)
 	{
 		//generate intial state
+		cout<<"using default puzzle"<<endl;
 
 	} 
 	else if(puzzle_choice == 2)
