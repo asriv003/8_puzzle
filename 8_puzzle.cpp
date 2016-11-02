@@ -2,16 +2,17 @@
 #include <cstdio>
 #include <cstdlib>
 #include <queue>
+#include <set>
 
 using namespace std;
 
 class Node
 {
 private:
-	int state[9];
 	int h_n;
 	int g_n;
 public:
+	int state[9];
 	int f_n;
 	Node(){}
 	Node( int nNewState[], int nH, int nG )
@@ -41,15 +42,23 @@ public:
 				cout<<endl;
 		}
 	}
+	bool is_equal_state (int *test)
+	{
+		bool check = true;
+		for(int i = 0; i < 9; i++)
+			if(state[i] != test[i])
+				check = false;
+		return check;
+	}
+
 };
 
 class puzzle
 {
 private:
 	Node current_node;
-	Node goal_node;
 	int goal[9];
-	queue<Node> visited_nodes;
+	set<Node> visited_nodes;
 public:
 	puzzle(){}
 	~puzzle(){}
@@ -71,7 +80,6 @@ public:
 			goal[i] = i+1; 
 
 		goal[8] = 0;
-		goal_node.set_state(goal);
 	}
 	bool is_goal(Node n)
 	{
@@ -82,37 +90,83 @@ public:
 				check = false;
 		return check;
 	}
+	int is_visited(Node n)
+	{
+		set<Node>::iterator it;
+		int* a = n.get_state();
+		for (it = visited_nodes.begin(); it != visited_nodes.end(); ++it)
+		{
+			/*int* b = it->get_state();*/
+			bool check = true;
+			for(int i = 0; i < 9; i++)
+			{
+				if(it->state[i] != a[i])
+				{
+					check = false;
+					break;
+				}
+			}
+			if(check)
+				return true;
+		}
+		return false;
+	}
 };
 
-
-//check valid move
-bool is_valid_move()
+int blank_index(int node[9])
 {
-
+	int blank = 0;
+	for(int i = 0; i < 9; i++)
+		if(node[i] == blank)
+			return i;
 }
 
 //move blank left function
-void move_blank_left()
+bool move_blank_left(Node &n)
 {
-
+	int blank = blank_index(n.get_state());
+	if(blank%3 != 0)
+	{
+		//swap_value(&current[index], &current[index-(int)row]);
+		return true;
+	}
+	return false;
 }
 
 //move blank right function
-void move_blank_right()
+bool move_blank_right(Node &n)
 {
-
+int blank = blank_index(n.get_state());
+	if(blank%3 != 2)
+	{
+		//swap_value(&current[index], &current[index-(int)row]);
+		return true;
+	}
+	return false;
 }
 
 //move blank up funtion
-void move_blank_up()
+bool move_blank_up(Node &n)
 {
-
+	int blank = blank_index(n.get_state());
+	if(blank >= 3)
+	{
+		//swap_value(&current[index], &current[index-(int)row]);
+		return true;
+	}
+	return false;
 }
 
 //move blank down function
-void move_blank_down()
+bool move_blank_down(Node &n)
 {
-
+	int blank = blank_index(n.get_state());
+	if(blank < 6)
+	{
+		//swap(&current[index], &current[index+(int)row]);
+		return true;
+	}
+	return false;
 }
 
 //uniform cost search algorithm
@@ -148,12 +202,6 @@ bool operator> (const  Node &node1, const Node &node2)
 	return node1.f_n < node2.f_n;	
 }
 
-
-// Add container elements.
-/*pqStudent2.push( Student( "Mark", 38 ) );
-pqStudent2.push( Student( "Marc", 25 ) );
-*/
-
 //general-search
 void general_search(Node problem, void *queuing_function())
 {
@@ -176,10 +224,6 @@ void general_search(Node problem, void *queuing_function())
 
 }
 
-//generate random intial stage
-
-//generate goal state
-
 //output funtion
 void output(int total_nodes, int max_nodes, int depth)
 {
@@ -191,7 +235,7 @@ void output(int total_nodes, int max_nodes, int depth)
 int main(int argc, char const *argv[])
 {
 	int puzzle_choice, algo_choice;
-	int start_state[9] = {1,2,3,4,0,6,7,5,8};
+	int start_state[9] = {1,2,3,4,0,6,7,5,8};	//default state
 	
 	cout<<"Welcome to Abhishek's 8-puzzle solver."<<endl;
 	
